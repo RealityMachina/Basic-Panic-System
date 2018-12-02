@@ -9,7 +9,7 @@ using BattleTech.Save.SaveGameStructure;
 
 namespace BasicPanic
 {
-    [HarmonyPatch(typeof(GameInstanceSave))]
+    [HarmonyPatch(typeof(GameInstanceSave), MethodType.Constructor)]
     [HarmonyPatch(new Type[] { typeof(GameInstance), typeof(SaveReason) })]
     public static class GameInstanceSave_Constructor_Patch
     {
