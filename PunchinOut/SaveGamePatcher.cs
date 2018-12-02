@@ -15,25 +15,49 @@ namespace BasicPanic
     {
         static void Postfix(GameInstanceSave __instance)
         {
-            Holder.SerializeStorageJson(__instance.InstanceGUID, __instance.SaveTime);
+            try
+            {
+                Holder.SerializeStorageJson(__instance.InstanceGUID, __instance.SaveTime);
+            }
+            catch
+            {
+                // TODO: should do something here if the holder reports an error trying to serialize
+                return;
+            }
         }
     }
 
     [HarmonyPatch(typeof(GameInstance), "Load")]
     public static class GameInstance_Load_Patch
     {
-        static void Prefix(GameInstanceSave save)
+        static void Prefix(GameInstance __instance, GameInstanceSave save)
         {
-            Holder.Resync(save.SaveTime);
+            try
+            {
+                Holder.Resync(save.SaveTime);
+            }
+            catch
+            {
+                // TODO: should do something here if the holder reports an error trying to serialize
+                return;
+            }
         }
     }
 
     [HarmonyPatch(typeof(SimGameState), "_OnFirstPlayInit")]
     public static class SimGameState_FirstPlayInit_Patch
     {
-        static void Postfix(SimGameState __instance) //we're doing a new campaign, so we need to sync the json with the new addition
+        static void Postfix(SimGameState __instance, SimGameState.SimGameType gameType, bool allowDebug) //we're doing a new campaign, so we need to sync the json with the new addition
         {
-            Holder.SyncNewCampaign();
+            try
+            {
+                Holder.SyncNewCampaign();
+            }
+            catch
+            {
+                // TODO:  should do something here if the holder reports an error
+                return;
+            }
         }
     }
 }
