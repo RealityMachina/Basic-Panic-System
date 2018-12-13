@@ -214,12 +214,12 @@ namespace BasicPanic
     {
         public static bool ShouldPanic(Mech mech, AttackDirector.AttackSequence attackSequence)
         {
-            if (mech == null || mech.IsDead || (mech.IsFlaggedForDeath && mech.HasHandledDeath))
+            if (mech == null || attackSequence == null )
             {
                 return false;
             }
 
-            if(attackSequence == null)
+            if(mech.IsDead || (mech.IsFlaggedForDeath && mech.HasHandledDeath) || mech.team == null)
             {
                 return false;
             }
