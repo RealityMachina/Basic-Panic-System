@@ -3,7 +3,7 @@ ModTek mod that adds a basic panic system for MechWarriors, both playable and no
 
 ## Installation
 
-Install [BTML](https://github.com/Mpstark/BattleTechModLoader) and [ModTek](https://github.com/Mpstark/ModTek). Extract files to `BATTLETECH\Mods\BasicPanicSystem\`.
+Install [BTML](https://github.com/janxious/BattleTechModLoader) and [ModTek](https://github.com/janxious/ModTek). Extract files to `BATTLETECH\Mods\BasicPanicSystem\`.
 
 ## General Details
 
