@@ -27,9 +27,9 @@ namespace BasicPanic
                 return;
 
 
-            if (__instance.directorSequences[0].target is Mech)
+            if (__instance.directorSequences[0].chosenTarget is Mech)
             {
-                mech = __instance.directorSequences[0].target as Mech;
+                mech = __instance.directorSequences[0].chosenTarget as Mech;
                 ShouldPanic = RollHelpers.ShouldPanic(mech, attackCompleteMessage.attackSequence);
 
 
@@ -122,7 +122,7 @@ namespace BasicPanic
                 Holder.TrackedPilots[index].ChangedRecently = false;
             }
             else if (Holder.TrackedPilots[index].pilotStatus != originalStatus)
-            {
+            {               
 
                 __instance.StatCollection.ModifyStat<float>("Panic Turn Reset: Accuracy", -1, "AccuracyModifier", StatCollection.StatOperation.Set, 0f, -1, true);
                 __instance.StatCollection.ModifyStat<float>("Panic Turn Reset: Mech To Hit", -1, "ToHitThisActor", StatCollection.StatOperation.Set, 0f, -1, true);
@@ -223,13 +223,13 @@ namespace BasicPanic
             {
                 return false;
             }
-
-            if (!attackSequence.attackDidDamage) //no point in panicking over nothing
+            var id = attackSequence.chosenTarget.GUID;
+            if (!attackSequence.GetAttackDidDamage(id)) //no point in panicking over nothing
             {
                 return false;
             }
 
-            if(!attackSequence.attackDamagedStructure && !attackSequence.lowArmorStruck) //no structure damage and didn't strike low armour
+            if(attackSequence.GetStructureDamageDealt(id) < 1 && !attackSequence.GetLowArmorStruck(id)) //no structure damage and didn't strike low armour
             {
                 float totalArmor = 0, maxArmor = 0;
 
@@ -581,15 +581,15 @@ namespace BasicPanic
         
         public static bool RollForEjectionResult(Mech mech, AttackDirector.AttackSequence attackSequence, bool IsEarlyPanic)
         {
-            if (mech == null || mech.IsDead || (mech.IsFlaggedForDeath && !mech.HasHandledDeath))
+            if (mech == null || mech.IsDead || (mech.IsFlaggedForDeath && !mech.HasHandledDeath) || attackSequence == null)
                 return false;
 
             // knocked down mechs cannot eject
             if (mech.IsProne && Settings.KnockedDownCannotEject)
                 return false;
-
+            var id = attackSequence.chosenTarget.GUID;
             // have to do damage
-            if (!attackSequence.attackDidDamage)
+            if (!attackSequence.GetAttackDidDamage(id))
                 return false;
 
             Pilot pilot = mech.GetPilot();
